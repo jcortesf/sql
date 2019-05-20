@@ -41,7 +41,7 @@ FROM (
 		  --No van cuentas superiores
           WHEN 4 THEN '4 Ingresos Por Venta'
           WHEN 5 THEN '5 Costos De Venta'
-          WHEN 6 THEN '6 Gastos DE Admnistración'
+          WHEN 6 THEN '6 Gastos De Admnistración'
           WHEN 7 THEN '7 Ingresos Financieros'
           WHEN 8 THEN '8 Gastos Financieros'
         END                                    AS   AcctGroup,

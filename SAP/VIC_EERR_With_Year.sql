@@ -3,9 +3,7 @@ DECLARE @ANIO SMALLINT
 SET @ANIO = (SELECT A.Year FROM dbo.OACP A WHERE A.Year ='2015')
  
 SELECT 
-    --P.[Year],
 	P.[Cuenta],
-	--P.Name,
 	P.[AcctGroup],
 	P.[Nombre],
 	P.[PrcCode],
@@ -21,7 +19,6 @@ FROM (
 	SELECT
 	    YEAR(T0.RefDate) AS Year,
 		T0.Account AS Cuenta,
-		--T4.Name,
 		CASE T1.GroupMask
           WHEN 1 THEN '1 Activo'
           WHEN 2 THEN '2 Pasivo'
@@ -42,13 +39,11 @@ FROM (
 	FROM dbo.JDT1 T0
 	INNER JOIN dbo.OACT T1 ON T1.AcctCode=T0.Account
 	LEFT JOIN dbo.OPRC T2 ON T2.PrcCode=T0.ProfitCode
-	--LEFT JOIN [dbo].[@VIC_OCAA] T4 ON T4.Code = T1.U_grupoAnalisis
  
-	WHERE YEAR(T0.RefDate)>= @ANIO AND T1.GroupMask BETWEEN 1 AND 10
+	WHERE YEAR(T0.RefDate)>= @ANIO 
+	  AND T1.GroupMask BETWEEN 1 AND 10
 	  AND T1.GroupMask NOT IN (1,2,3)
-	  --AND T4.Code = '01'
 	GROUP BY YEAR(T0.RefDate), T0.Account,
-	--T4.Name,
 	T1.GroupMask, T1.AcctName, T2.PrcName,T2.PrcCode ,MONTH(T0.RefDate)
 ) P
  
@@ -57,4 +52,4 @@ PIVOT (
 	FOR [Year] IN ([2015],[2016],[2017],[2018],[2019])
 ) P
  
-ORDER BY P.[AcctGroup]--, P.[CCosto]
+ORDER BY P.[AcctGroup]
