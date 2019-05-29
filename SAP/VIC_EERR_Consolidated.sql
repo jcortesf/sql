@@ -2,16 +2,17 @@ DECLARE @ANIO SMALLINT
  
 SET @ANIO = (SELECT A.Year FROM dbo.OACP A WHERE A.Year ='2018')
  
+
 SELECT 
 	P.[Cuenta],
 	P.[AcctGroup],
 	P.[Nombre],
 	P.[PrcCode],
-	isnull([EXIMBEN],0) as [EXIMBEN],
-	isnull([SERVIMEX],0) as [SERVIMEX],
-	isnull([VILU],0) as [VILU],
+	isnull([EXIMBEN],0)    as [EXIMBEN],
+	isnull([SERVIMEX],0)   as [SERVIMEX],
+	isnull([VILU],0)       as [VILU],
 	isnull([EXIMBENREG],0) as [EXIMBENREG],
-	isnull([LOSRISCOS],0) as [LOSRISCOS]
+	isnull([LOSRISCOS],0)  as [LOSRISCOS]
  
 FROM (	
 			SELECT
@@ -201,4 +202,3 @@ PIVOT (
 	FOR [Empresa] IN ([EXIMBEN],[SERVIMEX],[VILU],[EXIMBENREG],[LOSRISCOS])
 ) P
  
-ORDER BY P.[Nombre]
