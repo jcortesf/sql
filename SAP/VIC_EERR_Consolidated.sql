@@ -41,6 +41,7 @@ FROM (
 				WHERE YEAR(T0.RefDate)= @ANIO
 				  AND T1.GroupMask BETWEEN 1 AND 10
 				  AND T1.GroupMask NOT IN (1,2,3)
+	              AND T2.PrcName IS NOT NULL
 				GROUP BY 
 						 YEAR(T0.RefDate),
 						 T0.Account,
@@ -78,6 +79,7 @@ FROM (
 				WHERE YEAR(T0.RefDate)= @ANIO
 				  AND T1.GroupMask BETWEEN 1 AND 10
 				  AND T1.GroupMask NOT IN (1,2,3)
+	              AND T2.PrcName IS NOT NULL
 				GROUP BY 
 						 YEAR(T0.RefDate),
 						 T0.Account,
@@ -108,13 +110,14 @@ FROM (
 					T2.PrcCode AS PrcCode,
 					SUM(T0.Credit-T0.Debit) 'CargoAbono' 
  
-				FROM [SBO_VILUSA].dbo.JDT1 T0
-				INNER JOIN [SBO_VILUSA].dbo.OACT T1 ON T1.AcctCode=T0.Account
-				 LEFT JOIN [SBO_VILUSA].dbo.OPRC T2 ON T2.PrcCode=T0.ProfitCode
+				FROM [SBO_VILU_SA].dbo.JDT1 T0
+				INNER JOIN [SBO_VILU_SA].dbo.OACT T1 ON T1.AcctCode=T0.Account
+				 LEFT JOIN [SBO_VILU_SA].dbo.OPRC T2 ON T2.PrcCode=T0.ProfitCode
  
 				WHERE YEAR(T0.RefDate)= @ANIO
 				  AND T1.GroupMask BETWEEN 1 AND 10
 				  AND T1.GroupMask NOT IN (1,2,3)
+	              AND T2.PrcName IS NOT NULL
 				GROUP BY 
 						 YEAR(T0.RefDate),
 						 T0.Account,
@@ -152,6 +155,7 @@ FROM (
 				WHERE YEAR(T0.RefDate)= @ANIO
 				  AND T1.GroupMask BETWEEN 1 AND 10
 				  AND T1.GroupMask NOT IN (1,2,3)
+	              AND T2.PrcName IS NOT NULL
 				GROUP BY 
 						 YEAR(T0.RefDate),
 						 T0.Account,
@@ -189,6 +193,7 @@ FROM (
 				WHERE YEAR(T0.RefDate)= @ANIO
 				  AND T1.GroupMask BETWEEN 1 AND 10
 				  AND T1.GroupMask NOT IN (1,2,3)
+	              AND T2.PrcName IS NOT NULL
 				GROUP BY 
 						 YEAR(T0.RefDate),
 						 T0.Account,

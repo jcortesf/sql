@@ -4,7 +4,6 @@ SET @ANIO = (SELECT A.Year FROM dbo.OACP A WHERE A.Year='2018')
  
 SELECT 
 	P.[Cuenta],
-	--P.Name,
 	P.[AcctGroup],
 	P.[Nombre],
 	P.[CCosto],
@@ -24,35 +23,34 @@ SELECT
 FROM (
 	SELECT
 		T0.Account AS Cuenta,
-		--T4.Name,
 		CASE T1.GroupMask
           WHEN 1 THEN '1 Activo'
           WHEN 2 THEN '2 Pasivo'
           WHEN 3 THEN '3 Patrimonio'
-		  -- No van cuentas superiores
           WHEN 4 THEN '4 Ingresos Oper.'
           WHEN 5 THEN '5 Costos Oper.'
           WHEN 6 THEN '6 Gastos Oper.'
           WHEN 7 THEN '7 Otros Ingresos'
           WHEN 8 THEN '8 Otros Gastos'
-        END                                    AS   AcctGroup,
-		T1.AcctName AS Nombre,
-		T2.PrcName AS CCosto,
-		MONTH(T0.RefDate)'Month',
-		SUM(T0.Credit-T0.Debit)'CargoAbono' 
+        END                      AS   AcctGroup,
+		T1.AcctName              AS Nombre,
+		T2.PrcName               AS CCosto,
+		MONTH(T0.RefDate)       'Month',
+		SUM(T0.Credit-T0.Debit) 'CargoAbono' 
  
 	FROM dbo.JDT1 T0
 	INNER JOIN dbo.OACT T1 ON T1.AcctCode=T0.Account
 	LEFT JOIN dbo.OPRC T2 ON T2.PrcCode=T0.ProfitCode
-	--LEFT JOIN [SBO_EXIMBEN_SVE].[dbo].[@VIC_OCAA] T4 ON T4.Code = T1.U_grupoAnalisis
  
 	WHERE YEAR(T0.RefDate)=@ANIO AND T1.GroupMask BETWEEN 1 AND 10
-	  AND T1.GroupMask NOT IN (1,2,3) 
-	-- AND T2.PrcName LIKE 'ZFI.Mz. 12 galpón 4-5-6'
-	  --AND T4.Code = '01'
-	GROUP BY T0.Account,
-	--T4.Name,
-	T1.GroupMask, T1.AcctName, T2.PrcName,MONTH(T0.RefDate)
+	  AND T1.GroupMask NOT IN (1,2,3)
+	  AND T2.PrcName IS NOT NULL
+	GROUP BY 
+	      T0.Account,
+	      T1.GroupMask,
+		  T1.AcctName,
+		  T2.PrcName,
+		  MONTH(T0.RefDate)
 ) P
  
 PIVOT (
@@ -60,4 +58,4 @@ PIVOT (
 	FOR [Month] IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12])
 ) P
  
-ORDER BY P.[AcctGroup]--, P.[CCosto]
+ORDER BY P.[AcctGroup]

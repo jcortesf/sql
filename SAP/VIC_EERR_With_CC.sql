@@ -5,7 +5,7 @@ SET @ANIO = (SELECT A.Year FROM dbo.OACP A WHERE A.Year ='2018')
 SELECT 
     P.[Cuenta],
 	P.[AcctGroup],
-	P.[Nombre],
+	P.[Segment],
 	SUM(ISNULL(P.[ZFI.184],0))      [ZFI.184],
 	SUM(ISNULL(P.[ZFI.1010],0))     [ZFI.1010],
 	SUM(ISNULL(P.[ZFI.2002],0))     [ZFI.2002],
@@ -46,6 +46,7 @@ FROM (
           WHEN 8 THEN '8 Gastos Financieros'
         END                                    AS   AcctGroup,
 		T1.AcctName AS Nombre,
+		T1.Segment_0+'-'+T1.Segment_1+'-'+T1.AcctName  AS Segment,
 		T2.PrcCode AS PrcCode,
 		T2.PrcName AS CCosto,
 		SUM(T0.Credit-T0.Debit)'CargoAbono' 
@@ -57,11 +58,14 @@ FROM (
 	WHERE YEAR(T0.RefDate)= @ANIO 
 	  AND T1.GroupMask BETWEEN 1 AND 10
 	  AND T1.GroupMask NOT IN (1,2,3)
+	   AND T2.PrcName IS NOT NULL
 	GROUP BY 
 	         YEAR(T0.RefDate),
 			 T0.Account,
 	         T1.GroupMask,
 			 T1.AcctName,
+			 T1.Segment_0,
+			 T1.Segment_1,
 			 T2.PrcName,
 			 T2.PrcCode 
 ) P
@@ -93,5 +97,5 @@ PIVOT (
 					)
 	) P
 
-GROUP BY P.Cuenta,P.AcctGroup,P.Nombre
+GROUP BY P.Cuenta,P.AcctGroup,P.Segment
 ORDER BY P.[AcctGroup]

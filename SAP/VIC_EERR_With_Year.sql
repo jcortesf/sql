@@ -43,6 +43,7 @@ FROM (
 	WHERE YEAR(T0.RefDate)>= @ANIO 
 	  AND T1.GroupMask BETWEEN 1 AND 10
 	  AND T1.GroupMask NOT IN (1,2,3)
+	  AND T2.PrcName IS NOT NULL
 	GROUP BY YEAR(T0.RefDate), T0.Account,
 	T1.GroupMask, T1.AcctName, T2.PrcName,T2.PrcCode ,MONTH(T0.RefDate)
 ) P
