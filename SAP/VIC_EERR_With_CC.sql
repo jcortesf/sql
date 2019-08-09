@@ -3,6 +3,7 @@ DECLARE @ANIO SMALLINT
 SET @ANIO = (SELECT A.Year FROM dbo.OACP A WHERE A.Year ='2018')
  
 SELECT 
+    P.[Year],
     P.[Cuenta],
 	P.[AcctGroup],
 	P.[Segment],
@@ -55,7 +56,7 @@ FROM (
 	INNER JOIN dbo.OACT T1 ON T1.AcctCode=T0.Account
 	LEFT JOIN dbo.OPRC T2 ON T2.PrcCode=T0.ProfitCode
  
-	WHERE YEAR(T0.RefDate)= @ANIO 
+	WHERE YEAR(T0.RefDate) IN (2018,2019) 
 	  AND T1.GroupMask BETWEEN 1 AND 10
 	  AND T1.GroupMask NOT IN (1,2,3)
 	   AND T2.PrcName IS NOT NULL
@@ -97,5 +98,5 @@ PIVOT (
 					)
 	) P
 
-GROUP BY P.Cuenta,P.AcctGroup,P.Segment
+GROUP BY P.Year,P.Cuenta,P.AcctGroup,P.Segment
 ORDER BY P.[AcctGroup]
