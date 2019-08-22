@@ -58,15 +58,31 @@ FROM(
 			SELECT
 				YEAR(T0.RefDate) AS Year,
 				T0.Account AS Cuenta,
-				CASE T1.GroupMask
-				  WHEN 1 THEN '1 Activo'
-				  WHEN 2 THEN '2 Pasivo'
-				  WHEN 3 THEN '3 Patrimonio'
-				  WHEN 4 THEN '4 INGRESOS POR VENTA'
-				  WHEN 5 THEN '5 COSTOS DE VENTA'
-				  WHEN 6 THEN '6 GASTOS DE ADMNISTRACION'
-				  WHEN 7 THEN '7 INGRESOS FINANCIEROS'
-				  WHEN 8 THEN '8 GASTOS FINANCIEROS'
+				CASE 
+				  WHEN T1.U_VIC_CambioNivel2 > 0 THEN 
+													CASE (SELECT GroupMask 
+													        FROM dbo.OACT 
+														   WHERE AcctCode = T1.U_VIC_CambioNivel2)
+														WHEN 1 THEN '1 Activo'
+														WHEN 2 THEN '2 Pasivo'
+														WHEN 3 THEN '3 Patrimonio'
+														WHEN 4 THEN '4 INGRESOS POR VENTA'
+														WHEN 5 THEN '5 COSTOS DE VENTA'
+														WHEN 6 THEN '6 GASTOS DE ADMNISTRACION'
+														WHEN 7 THEN '7 INGRESOS FINANCIEROS'
+														WHEN 8 THEN '8 GASTOS FINANCIEROS'
+													END
+		         ELSE                               
+													CASE T1.GroupMask
+														WHEN 1 THEN '1 Activo'
+														WHEN 2 THEN '2 Pasivo'
+														WHEN 3 THEN '3 Patrimonio'
+														WHEN 4 THEN '4 INGRESOS POR VENTA'
+														WHEN 5 THEN '5 COSTOS DE VENTA'
+														WHEN 6 THEN '6 GASTOS DE ADMNISTRACION'
+														WHEN 7 THEN '7 INGRESOS FINANCIEROS'
+														WHEN 8 THEN '8 GASTOS FINANCIEROS'
+													END   
 				END                      AS   AcctGroup,
 				T1.AcctName              AS Nombre,
 				T1.Segment_0+'-'+T1.Segment_1+'-'+T1.AcctName  AS Segment,
@@ -87,6 +103,7 @@ FROM(
 			GROUP BY 
 				  T0.Account,
 				  T1.GroupMask,
+				  T1.U_VIC_CambioNivel2,
 				  T1.AcctName,
 				  T1.Segment_0,
 				  T1.Segment_1,
